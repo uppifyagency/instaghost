@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaGhost · Mockup UI ripulita</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ig-gradient:linear-gradient(135deg,#833ab4 0%,#E4405F 50%,#fcb045 100%);
+    --ig-gradient-text:linear-gradient(135deg,#c678dd 0%,#ff6b9d 50%,#ffd93d 100%);
+    --accent:#E4405F; --accent-hover:#ff5a7a;
+    --surface-1:#0c0c0e; --surface-2:#111113; --surface-3:#18181b; --surface-4:#1f1f23;
+    --glass-bg:rgba(255,255,255,.03); --glass-border:rgba(255,255,255,.06);
+    --text-primary:#fafafa; --text-secondary:rgba(250,250,250,.64); --text-muted:rgba(250,250,250,.4);
+    --border-default:rgba(255,255,255,.08); --border-hover:rgba(255,255,255,.12);
+    --success:#30D158; --success-bg:rgba(48,209,88,.1); --success-muted:rgba(48,209,88,.18);
+    --warning:#FFD60A; --info:#64D2FF;
+    --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-full:9999px;
+    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'SF Mono','Fira Code',Consolas,monospace;
+    --shadow-lg:0 8px 24px rgba(0,0,0,.3),0 4px 8px rgba(0,0,0,.2);
+    --ease:cubic-bezier(.25,1,.5,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:var(--font-sans); color:var(--text-primary);
+    background:#09090b radial-gradient(ellipse 80% 50% at 50% -20%,rgba(131,58,180,.14) 0%,transparent 60%);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; gap:18px; padding:28px 16px 60px;
+  }
+
+  /* switcher anteprima (solo nel mockup) */
+  .preview-switch{display:flex; gap:6px; padding:6px; background:var(--surface-2); border:1px solid var(--border-default); border-radius:var(--radius-full)}
+  .preview-switch button{font-family:inherit; font-size:12px; font-weight:600; color:var(--text-secondary); background:transparent; border:0; padding:7px 14px; border-radius:var(--radius-full); cursor:pointer; transition:all .2s var(--ease)}
+  .preview-switch button.active{background:var(--surface-4); color:var(--text-primary)}
+  .preview-note{font-size:11px; color:var(--text-muted)}
+
+  /* pannello (simula il side panel ~384px) */
+  .panel{
+    width:384px; max-width:100%; min-height:560px;
+    background:var(--surface-1); border:1px solid var(--border-default); border-radius:22px;
+    box-shadow:var(--shadow-lg); padding:18px; display:flex; flex-direction:column; gap:16px; position:relative; overflow:hidden;
+  }
+  .panel::before{content:""; position:absolute; inset:0 0 auto 0; height:120px; background:radial-gradient(ellipse 70% 100% at 50% 0,rgba(131,58,180,.12),transparent 70%); pointer-events:none}
+
+  /* header */
+  .header{display:flex; align-items:center; justify-content:space-between}
+  .logo{display:flex; align-items:center; gap:8px; font-size:18px; font-weight:700; letter-spacing:-.02em}
+  .logo .hl{background:var(--ig-gradient-text); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+  .badge{display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--text-secondary); background:var(--glass-bg); border:1px solid var(--border-default); padding:5px 10px; border-radius:var(--radius-full)}
+  .badge .dot{width:7px; height:7px; border-radius:50%; background:var(--success); box-shadow:0 0 8px var(--success)}
+
+  /* card */
+  .card{background:var(--glass-bg); border:1px solid var(--border-default); border-radius:var(--radius-lg); padding:16px; display:flex; flex-direction:column; gap:14px; backdrop-filter:blur(24px)}
+  .field{display:flex; flex-direction:column; gap:7px}
+  .label{font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--text-muted)}
+  .input{
+    font-family:inherit; font-size:15px; font-weight:500; color:var(--text-primary);
+    background:var(--surface-3); border:1px solid var(--border-default); border-radius:var(--radius-md);
+    padding:12px 14px; outline:none; transition:border-color .2s,box-shadow .2s; width:100%;
+  }
+  .input:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(228,64,95,.18)}
+  .input.handle{display:flex; align-items:center; gap:8px}
+  .input.handle .at{color:var(--text-muted); font-weight:700}
+  .input.handle input{all:unset; flex:1; font-size:15px; font-weight:600; color:var(--text-primary)}
+  .hint-detected{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--success)}
+  .hint-detected .dot{width:6px;height:6px;border-radius:50%;background:var(--success)}
+
+  /* riga post + commenti */
+  .row{display:flex; align-items:flex-end; justify-content:space-between; gap:14px}
+  .stepper{display:flex; align-items:center; background:var(--surface-3); border:1px solid var(--border-default); border-radius:var(--radius-md); overflow:hidden}
+  .stepper button{all:unset; width:38px; height:44px; display:grid; place-items:center; font-size:18px; color:var(--text-secondary); cursor:pointer; transition:background .15s}
+  .stepper button:hover{background:var(--surface-4); color:var(--text-primary)}
+  .stepper .val{min-width:48px; text-align:center; font-size:16px; font-weight:700; font-variant-numeric:tabular-nums}
+  .toggle{display:flex; align-items:center; gap:9px; cursor:pointer; user-select:none; padding-bottom:11px}
+  .toggle .sw{width:40px; height:23px; border-radius:var(--radius-full); background:var(--ig-gradient); position:relative; transition:opacity .2s; flex:none}
+  .toggle .sw::after{content:""; position:absolute; top:2px; right:2px; width:19px; height:19px; border-radius:50%; background:#fff; transition:all .2s var(--ease)}
+  .toggle.off .sw{background:var(--surface-4)} .toggle.off .sw::after{right:19px}
+  .toggle .t{font-size:12.5px; color:var(--text-secondary)}
+
+  /* bottoni */
+  .btn{font-family:inherit; font-weight:700; font-size:15px; border:0; border-radius:var(--radius-md); padding:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:transform .12s var(--ease),filter .2s; width:100%}
+  .btn:active{transform:scale(.985)}
+  .btn-primary{background:var(--ig-gradient); color:#fff; box-shadow:0 6px 18px rgba(228,64,95,.28)}
+  .btn-primary:hover{filter:brightness(1.07)}
+  .btn-ghost{background:var(--glass-bg); border:1px solid var(--border-default); color:var(--text-primary); font-size:13.5px; font-weight:600}
+  .btn-ghost:hover{background:var(--surface-3); border-color:var(--border-hover)}
+  .btn-copy{background:var(--surface-4); border:1px solid var(--border-hover); color:var(--text-primary)}
+  .btn-copy.done{background:var(--success-bg); border-color:var(--success-muted); color:var(--success)}
+  .two{display:flex; gap:10px}
+  .caption{font-size:11.5px; color:var(--text-muted); text-align:center}
+
+  /* progress */
+  .progress{display:flex; flex-direction:column; gap:8px}
+  .progress .meta{display:flex; justify-content:space-between; font-size:12px; color:var(--text-secondary)}
+  .progress .meta .num{font-variant-numeric:tabular-nums; color:var(--text-primary); font-weight:600}
+  .track{height:8px; border-radius:var(--radius-full); background:var(--surface-3); overflow:hidden}
+  .fill{height:100%; width:42%; border-radius:var(--radius-full); background:var(--ig-gradient); transition:width .4s var(--ease)}
+
+  /* result card */
+  .result{background:var(--success-bg); border:1px solid var(--success-muted); border-radius:var(--radius-lg); padding:16px; display:flex; flex-direction:column; gap:13px}
+  .result .head{display:flex; align-items:center; gap:10px}
+  .result .head .ico{width:34px;height:34px;border-radius:50%;background:var(--success-muted);display:grid;place-items:center;font-size:17px}
+  .result .head .who{font-size:15px; font-weight:700}
+  .result .head .sub{font-size:12px; color:var(--text-secondary)}
+  .saved{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-muted)}
+
+  /* visibilità per stato */
+  .panel[data-state="idle"] .progress,
+  .panel[data-state="idle"] .result{display:none}
+  .panel[data-state="running"] .result{display:none}
+  .panel[data-state="running"] .form-actions{display:none}
+  .panel[data-state="running"] .extract-card{opacity:.55; pointer-events:none}
+  .panel[data-state="done"] .progress{display:none}
+  .panel[data-state="done"] .form-actions{display:none}
+  .panel[data-state="done"] .extract-card{opacity:.55; pointer-events:none}
+
+  .footer{margin-top:auto; text-align:center; font-size:11px; color:var(--text-muted); padding-top:8px}
+</style>
+</head>
+<body>
+
+  <div class="preview-switch" role="tablist">
+    <button class="active" data-go="idle">Vuoto</button>
+    <button data-go="running">In corso</button>
+    <button data-go="done">Fatto</button>
+  </div>
+  <div class="preview-note">↑ anteprima stati (solo nel mockup). Larghezza simulata del side panel: 384px.</div>
+
+  <div class="panel" id="panel" data-state="idle">
+
+    <div class="header">
+      <div class="logo">👻 Insta<span class="hl">Ghost</span></div>
+      <div class="badge"><span class="dot"></span> su un profilo</div>
+    </div>
+
+    <!-- CARD ESTRAZIONE (core) -->
+    <div class="card extract-card">
+      <div class="field">
+        <span class="label">Profilo</span>
+        <div class="input handle"><span class="at">@</span><input value="ingiroconalice" spellcheck="false"></div>
+        <span class="hint-detected"><span class="dot"></span> rilevato dalla pagina</span>
+      </div>
+
+      <div class="row">
+        <div class="field" style="flex:1">
+          <span class="label">Post (dal più recente)</span>
+          <div class="stepper">
+            <button>−</button><span class="val">60</span><button>+</button>
+          </div>
+        </div>
+        <label class="toggle">
+          <span class="sw"></span>
+          <span class="t">Primi commenti</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary">🧠 Estrai → Guida</button>
+        <p class="caption">Knowledge base pulito (Markdown), pronto per un LLM.</p>
+      </div>
+    </div>
+
+    <!-- PROGRESS (stato in corso) -->
+    <div class="progress">
+      <div class="meta"><span id="phase">Raccolta post…</span><span class="num" id="pnum">24/60</span></div>
+      <div class="track"><div class="fill" id="fill" style="width:40%"></div></div>
+    </div>
+
+    <!-- RESULT (stato fatto) -->
+    <div class="result">
+      <div class="head">
+        <div class="ico">✅</div>
+        <div>
+          <div class="who">@ingiroconalice</div>
+          <div class="sub">60 post · 286 commenti</div>
+        </div>
+      </div>
+      <button class="btn btn-copy" id="copyBtn">📋 Copia il Markdown</button>
+      <div class="two">
+        <button class="btn btn-ghost">⬇ Markdown</button>
+        <button class="btn btn-ghost">⬇ JSON</button>
+      </div>
+      <div class="saved">💾 già salvati anche nella cartella Download</div>
+      <button class="btn btn-ghost" id="again">↺ Nuova estrazione</button>
+    </div>
+
+    <div class="footer">👻 InstaGhost · un solo scopo</div>
+  </div>
+
+<script>
+  const panel=document.getElementById('panel');
+  document.querySelectorAll('.preview-switch button').forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll('.preview-switch button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); panel.dataset.state=b.dataset.go;
+    };
+  });
+  // micro-interazioni mockup
+  document.getElementById('copyBtn').onclick=function(){ this.textContent='✓ Copiato negli appunti'; this.classList.add('done'); setTimeout(()=>{this.textContent='📋 Copia il Markdown'; this.classList.remove('done');},1600); };
+  document.getElementById('again').onclick=()=>{ document.querySelector('[data-go="idle"]').click(); };
+  // toggle commenti
+  document.querySelector('.toggle').onclick=function(){ this.classList.toggle('off'); };
+  // stepper
+  const val=document.querySelector('.stepper .val');
+  document.querySelectorAll('.stepper button').forEach((btn,i)=>btn.onclick=()=>{ let n=parseInt(val.textContent)+(i?10:-10); val.textContent=Math.max(1,Math.min(500,n)); });
+</script>
+</body>
+</html>

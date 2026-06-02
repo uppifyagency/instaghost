@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "InstaGhost Slice Test",
+  "version": "0.0.1",
+  "description": "Vertical slice: prova la fetch /api/v1 dal content-script di un'estensione installata (isolated + MAIN world).",
+  "permissions": ["scripting"],
+  "host_permissions": ["https://www.instagram.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content-iso.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content-main.js"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaGhost — mockup pannello v4 (de-slop)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   InstaGhost — design tokens (v4, de-slop)
+   Regole: monocromatico + 1 accento. Gradiente SOLO su CTA e logo.
+   Vietati: verde "success", dot-LED con alone/pulsazione, glow colorati,
+   superfici decorative. Lo stato si comunica con testo + colore piatto.
+   ============================================================ */
+:root{
+  --bg:#0a0a0c;
+  --s-1:#0f0f12;        /* card */
+  --s-2:#161619;        /* controlli inset */
+  --s-3:#1e1e23;        /* hover */
+  --line:rgba(255,255,255,.07);
+  --line-2:rgba(255,255,255,.13);
+  --tx:#f5f5f6;
+  --tx-2:rgba(245,245,246,.58);
+  --tx-3:rgba(245,245,246,.36);
+  --accent:#E4405F;                 /* unico accento */
+  --grad:linear-gradient(135deg,#7d54f0 0%,#E4405F 56%,#ff8f5e 100%); /* solo CTA + logo */
+  --warn:#c99a52;                   /* ambra desaturata, piatta — solo warning reali */
+  --r-sm:9px; --r-md:12px; --r-lg:14px; --r-full:999px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --ring:0 0 0 3px rgba(228,64,95,.30);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:var(--font); background:#050506; color:var(--tx);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  font-variant-numeric:tabular-nums;
+  display:flex; flex-direction:column; align-items:center;
+  padding:24px 16px 56px; gap:16px; min-height:100%;
+}
+:focus-visible{outline:none; box-shadow:var(--ring); border-radius:var(--r-sm)}
+@media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important} }
+
+/* ---- barra demo (NON fa parte del prodotto) ---- */
+.demobar{width:100%; max-width:760px; background:#0d0d10; border:1px solid var(--line); border-radius:var(--r-md); padding:12px 14px; display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+.demobar .lab{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--tx-3); margin-right:4px}
+.demobar button{font:inherit; font-size:12.5px; font-weight:500; color:var(--tx-2); background:var(--s-2); border:1px solid var(--line); border-radius:var(--r-full); padding:6px 12px; cursor:pointer; transition:.15s var(--ease)}
+.demobar button:hover{background:var(--s-3); color:var(--tx)}
+.demobar button[aria-pressed="true"]{background:rgba(228,64,95,.14); border-color:rgba(228,64,95,.4); color:#ffadbf}
+
+/* ============================================================
+   IL PANNELLO
+   ============================================================ */
+.panel{
+  width:380px; max-width:100%;
+  background:var(--s-1);              /* superficie piatta, niente alone */
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:0 24px 64px -30px rgba(0,0,0,.85);
+  overflow:hidden;
+}
+.body{padding:18px}
+
+/* ---- header ---- */
+.head{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.brand{display:flex; align-items:center; gap:7px; font-size:16px; font-weight:700; letter-spacing:-.02em}
+.brand .gh{font-size:16px}
+.brand .g{background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}  /* logo = unica eccezione */
+.pill{display:inline-flex; align-items:center; gap:7px; font-size:11.5px; font-weight:500; color:var(--tx-2); background:var(--s-2); border:1px solid var(--line); padding:5px 11px 5px 9px; border-radius:var(--r-full); white-space:nowrap}
+.pill .dot{width:5px; height:5px; border-radius:50%; background:var(--tx-3); flex:none}  /* piatto, niente alone/pulsazione */
+.pill[data-tone="ok"] .dot{background:var(--tx-2)}
+.pill[data-tone="warn"] .dot{background:var(--warn)}
+.pill[data-tone="busy"] .dot{background:var(--accent)}
+
+.rule{height:1px; background:var(--line); margin:16px 0}
+
+/* ---- scopo + mini-step ---- */
+.lede{font-size:13px; line-height:1.5; color:var(--tx-2)}
+.lede b{color:var(--tx); font-weight:600}
+.miniwf{display:flex; align-items:center; gap:9px; margin-top:11px; font-size:11px; color:var(--tx-3)}
+.miniwf span{display:inline-flex; align-items:center; gap:6px}
+.miniwf i{width:17px; height:17px; border-radius:50%; border:1px solid var(--line-2); display:grid; place-items:center; font-size:10px; font-style:normal; font-weight:600; color:var(--tx-2)}
+.miniwf .sep{flex:1; height:1px; background:var(--line); max-width:18px}
+
+/* ---- form ---- */
+.field{display:flex; flex-direction:column; gap:7px}
+.label{font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--tx-3)}
+.handle{display:flex; align-items:center; gap:8px; background:var(--s-2); border:1px solid var(--line); border-radius:var(--r-md); padding:11px 12px; transition:border-color .18s var(--ease), box-shadow .18s var(--ease)}
+.handle:focus-within{border-color:var(--accent); box-shadow:var(--ring)}
+.handle .at{color:var(--tx-3); font-weight:600; font-size:15px}
+.handle input{all:unset; flex:1; font-size:15px; font-weight:500; color:var(--tx); min-width:0}
+.handle input::placeholder{color:var(--tx-3); font-weight:400}
+.chip{display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; color:var(--tx-2); flex:none}  /* neutro, non verde */
+.chip svg{width:13px; height:13px; color:var(--tx-3)}
+
+.grid2{display:flex; gap:10px; align-items:flex-end}
+.grid2 .field:first-child{flex:1}
+.stepper{display:flex; align-items:center; background:var(--s-2); border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden; height:44px}
+.stepper button{all:unset; width:40px; height:100%; display:grid; place-items:center; color:var(--tx-2); cursor:pointer; font-size:18px; transition:background .15s, color .15s}
+.stepper button:hover{background:var(--s-3); color:var(--tx)}
+.stepper input{all:unset; width:52px; height:100%; text-align:center; font-size:15px; font-weight:600; color:var(--tx); -moz-appearance:textfield}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+.toggle{display:flex; align-items:center; gap:9px; cursor:pointer; user-select:none; height:44px; padding:0 2px}
+.toggle .sw{width:38px; height:22px; border-radius:var(--r-full); background:var(--accent); position:relative; flex:none; transition:background .2s var(--ease)}  /* solido, niente gradiente */
+.toggle .sw::after{content:""; position:absolute; top:2px; left:18px; width:18px; height:18px; border-radius:50%; background:#fff; transition:left .2s var(--ease)}
+.toggle.off .sw{background:var(--s-3)} .toggle.off .sw::after{left:2px}
+.toggle .t{font-size:12.5px; color:var(--tx-2)}
+
+/* ---- bottoni ---- */
+.btn{font:inherit; font-weight:600; font-size:14px; border:0; border-radius:var(--r-md); padding:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; transition:transform .12s var(--ease), filter .18s, background .15s, border-color .15s}
+.btn:active{transform:scale(.99)}
+.btn:disabled{opacity:.5; cursor:default; transform:none}
+.btn svg{width:16px; height:16px; flex:none}
+.btn-primary{background:var(--grad); color:#fff; letter-spacing:.01em; box-shadow:0 4px 14px -10px rgba(0,0,0,.9)}  /* ombra neutra, niente glow colorato */
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-ghost{background:var(--s-2); border:1px solid var(--line); color:var(--tx); font-size:13px; font-weight:500}
+.btn-ghost:hover{background:var(--s-3); border-color:var(--line-2)}
+.btn-quiet{background:transparent; color:var(--tx-2); font-size:12.5px; font-weight:500}
+.btn-quiet:hover{color:var(--tx)}
+.hint{font-size:11.5px; color:var(--tx-3); text-align:center; margin-top:9px}
+
+.trust{display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px; font-size:11px; color:var(--tx-3)}
+.trust svg{width:12px; height:12px}
+
+/* ---- alert inline ---- */
+.alert{display:flex; gap:10px; padding:12px; border-radius:var(--r-md); border:1px solid var(--line); background:var(--s-2); font-size:12.5px; line-height:1.45}
+.alert svg{width:16px; height:16px; flex:none; margin-top:1px; color:var(--tx-2)}
+.alert .a-t{color:var(--tx); font-weight:600; display:block; margin-bottom:2px}
+.alert .a-d{color:var(--tx-2)}
+.alert[data-tone="warn"]{border-color:rgba(201,154,82,.30); background:rgba(201,154,82,.06)} .alert[data-tone="warn"] svg{color:var(--warn)}
+
+/* ---- step rail (running) — monocromatico + accento ---- */
+.wf{display:flex; align-items:flex-start; margin:18px 0}
+.wf .st{flex:1; display:flex; flex-direction:column; align-items:center; gap:7px; position:relative}
+.wf .st .ic{width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:600; background:var(--s-2); border:1px solid var(--line-2); color:var(--tx-3)}
+.wf .st .ic svg{width:14px; height:14px}
+.wf .st .nm{font-size:11px; color:var(--tx-3)}
+.wf .st .sub{font-size:11px; font-weight:600; color:var(--tx-2); min-height:14px}
+.wf .st::before{content:""; position:absolute; top:14px; left:-50%; width:100%; height:2px; background:var(--line); z-index:-1}
+.wf .st:first-child::before{display:none}
+.wf .st.done .ic{border-color:var(--line-2); color:var(--tx)}                 /* completato = check bianco, niente verde */
+.wf .st.done::before{background:var(--line-2)}
+.wf .st.active .ic{background:var(--accent); border-color:transparent; color:#fff}  /* attivo = accento pieno, niente glow */
+.wf .st.active .nm{color:var(--tx)}
+.wf .st.active::before{background:var(--accent)}
+
+.bar{height:7px; border-radius:var(--r-full); background:var(--s-2); overflow:hidden; margin-top:4px}
+.bar > i{display:block; height:100%; width:41%; border-radius:var(--r-full); background:var(--accent); transition:width .5s var(--ease)}  /* accento pieno */
+.runfoot{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:12px}
+.runfoot .msg{font-size:12px; color:var(--tx-2); display:flex; align-items:center; gap:7px}
+.runfoot .msg svg{width:14px; height:14px; color:var(--tx-3)}
+
+/* ---- risultato — monocromatico ---- */
+.result{display:flex; flex-direction:column; gap:14px}
+.res-head{display:flex; align-items:center; gap:12px}
+.res-head .ic{width:40px; height:40px; border-radius:50%; background:var(--s-2); border:1px solid var(--line-2); display:grid; place-items:center; color:var(--tx); flex:none}
+.res-head .ic svg{width:20px; height:20px}
+.res-head .who{font-size:16px; font-weight:700; letter-spacing:-.01em}
+.res-head .meta{font-size:12px; color:var(--tx-2); margin-top:2px}
+.res-meta-strong{color:var(--tx); font-weight:600}
+.two{display:flex; gap:10px}
+.savedrow{display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--tx-3); justify-content:center}
+.savedrow svg{width:13px; height:13px}
+
+/* ---- footer ---- */
+.foot{display:flex; align-items:center; justify-content:center; gap:6px; padding:12px 0 16px; font-size:11px; color:var(--tx-3)}
+.foot .lk{all:unset; cursor:pointer; color:var(--tx-2); text-decoration:underline; text-underline-offset:2px}
+.foot .lk:hover{color:var(--accent)}
+
+.stack{display:flex; flex-direction:column; gap:16px}
+.mt2{margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- barra demo: solo per rivedere gli stati, NON è nel prodotto -->
+<div class="demobar" role="group" aria-label="anteprima stati (solo mockup)">
+  <span class="lab">Anteprima stati</span>
+  <button data-v="ready" aria-pressed="true">Pronto (su profilo)</button>
+  <button data-v="igNoProfile" aria-pressed="false">Su IG, no profilo</button>
+  <button data-v="offIg" aria-pressed="false">Non su IG</button>
+  <button data-v="running" aria-pressed="false">In corso</button>
+  <button data-v="done" aria-pressed="false">Fatto</button>
+  <button data-v="errPrivate" aria-pressed="false">Errore: privato</button>
+  <button data-v="errRate" aria-pressed="false">Errore: rate-limit</button>
+  <button data-v="errReload" aria-pressed="false">Errore: reload</button>
+</div>
+
+<div class="panel" id="panel">
+  <div class="body">
+    <div class="head">
+      <div class="brand"><span class="gh">👻</span><span>Insta</span><span class="g">Ghost</span></div>
+      <div class="pill" id="pill" data-tone="ok"><span class="dot"></span><span id="pillTx">@ingiroconalice</span></div>
+    </div>
+    <div class="rule"></div>
+    <div id="content"></div>
+  </div>
+  <div class="foot">
+    <span>InstaGhost</span><span style="color:var(--tx-3)">·</span>
+    <button class="lk">reset &amp; pulisci dati</button>
+  </div>
+</div>
+
+<script>
+/* icone SVG monoline (stroke 1.6, currentColor) — niente emoji nei controlli.
+   La sparkle resta sulla CTA: scelta di brand richiesta. */
+const I = {
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+  refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-.5 4M20 5v6h-6"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/></svg>',
+  warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.5 20h19L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg>',
+};
+
+const lede = `
+  <p class="lede">Trasforma un profilo Instagram in una <b>guida pronta per un LLM</b> (Markdown).</p>
+  <div class="miniwf" aria-hidden="true">
+    <span><i>1</i> Profilo</span><span class="sep"></span>
+    <span><i>2</i> Post</span><span class="sep"></span>
+    <span><i>3</i> Commenti</span>
+  </div>`;
+
+function form({handle='', detected=false, alert=''}={}){
+  return `
+  ${alert}
+  <div class="stack ${alert?'mt2':''}">
+    <div class="field">
+      <span class="label">Profilo</span>
+      <label class="handle">
+        <span class="at">@</span>
+        <input value="${handle}" placeholder="scrivi o apri un profilo" spellcheck="false" aria-label="handle del profilo">
+        ${detected?`<span class="chip">${I.check} rilevato</span>`:''}
+      </label>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <span class="label">Post — dal più recente</span>
+        <div class="stepper"><button type="button" aria-label="meno">−</button><input value="60" aria-label="numero di post"><button type="button" aria-label="più">+</button></div>
+      </div>
+      <label class="toggle"><span class="sw"></span><span class="t">Commenti</span></label>
+    </div>
+    <div>
+      <button class="btn btn-primary">${I.spark} Estrai</button>
+      <p class="hint">Markdown pulito, pronto da incollare in ChatGPT o Claude.</p>
+    </div>
+  </div>
+  <div class="trust">${I.lock} usa la tua sessione · solo dati pubblici · nessun server</div>`;
+}
+
+function alertBox(tone, icon, title, desc){
+  return `<div class="alert" data-tone="${tone}" role="status">${icon}<div><span class="a-t">${title}</span><span class="a-d">${desc}</span></div></div>`;
+}
+
+const VIEWS = {
+  ready: { pill:['ok','@ingiroconalice'],
+    html: lede + `<div class="rule"></div>` + form({handle:'ingiroconalice', detected:true}) },
+  igNoProfile: { pill:['ok','su Instagram'],
+    html: lede + `<div class="rule"></div>` + form({alert: alertBox('info', I.info, 'Vai su un profilo', 'Apri un profilo Instagram per il rilevamento automatico, oppure scrivi l’handle qui sotto.')}) },
+  offIg: { pill:['warn','non su Instagram'],
+    html: `${alertBox('warn', I.warn, 'Apri Instagram per iniziare', 'InstaGhost legge i dati dalla tua sessione di Instagram già loggata: serve una scheda aperta su instagram.com.')}
+      <div class="stack mt2"><button class="btn btn-primary">${I.arrow} Apri instagram.com</button><p class="hint">Poi vai sul profilo che vuoi estrarre.</p></div>
+      <div class="trust">${I.lock} usa la tua sessione · solo dati pubblici · nessun server</div>` },
+  running: { pill:['busy','estrazione in corso'],
+    html: `<p class="lede">Sto creando la guida di <b>@ingiroconalice</b>…</p>
+      <div class="wf">
+        <div class="st done"><span class="ic">${I.check}</span><span class="nm">Profilo</span><span class="sub">letto</span></div>
+        <div class="st active"><span class="ic">2</span><span class="nm">Post</span><span class="sub">24 / 60</span></div>
+        <div class="st"><span class="ic">3</span><span class="nm">Commenti</span><span class="sub">—</span></div>
+      </div>
+      <div class="bar"><i style="width:41%"></i></div>
+      <div class="runfoot"><span class="msg">${I.clock} Puoi lasciare aperto il pannello.</span><button class="btn btn-quiet" style="width:auto">Annulla</button></div>` },
+  done: { pill:['ok','fatto'],
+    html: `<div class="result">
+        <div class="res-head"><div class="ic">${I.check}</div>
+          <div><div class="who">@ingiroconalice</div>
+          <div class="meta"><span class="res-meta-strong">60 post</span> · 286 commenti · 44 luoghi · 12.3k follower</div></div></div>
+        <button class="btn btn-primary">${I.copy} Copia il Markdown</button>
+        <div class="two"><button class="btn btn-ghost">${I.download} Markdown</button><button class="btn btn-ghost">${I.download} JSON</button></div>
+        <div class="savedrow">${I.check} già salvati nella cartella Download</div>
+        <div class="rule" style="margin:2px 0"></div>
+        <button class="btn btn-quiet">${I.refresh} Nuova estrazione</button>
+      </div>` },
+  errPrivate: { pill:['warn','profilo privato'],
+    html: form({handle:'profilo_privato', detected:true, alert: alertBox('warn', I.lock, '@profilo_privato è privato', 'Non posso leggerne i post: Instagram li mostra solo ai follower approvati.')}) },
+  errRate: { pill:['warn','rallentato'],
+    html: form({handle:'ingiroconalice', detected:true, alert: alertBox('warn', I.clock, 'Instagram ci ha rallentati', 'Troppe richieste ravvicinate. Aspetta qualche minuto e riprova: l’anti-detection si riprende da solo.')}) },
+  errReload: { pill:['warn','scheda da ricaricare'],
+    html: form({handle:'ingiroconalice', detected:true, alert: alertBox('warn', I.refresh, 'Ricarica la pagina Instagram', 'La scheda non risponde più al pannello. Aggiorna instagram.com (F5) e riprova.')}) },
+};
+
+const content = document.getElementById('content');
+const pill = document.getElementById('pill');
+const pillTx = document.getElementById('pillTx');
+function setView(v){
+  const view = VIEWS[v]; if(!view) return;
+  pill.dataset.tone = view.pill[0]; pillTx.textContent = view.pill[1];
+  content.innerHTML = view.html;
+  document.querySelectorAll('.demobar button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.v===v)));
+}
+document.querySelectorAll('.demobar button').forEach(b=> b.addEventListener('click', ()=>setView(b.dataset.v)));
+content.addEventListener('click', e=>{ const t = e.target.closest('.toggle'); if(t) t.classList.toggle('off'); });
+setView('ready');
+</script>
+</body>
+</html>

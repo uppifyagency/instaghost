@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "InstaGhost",
+  "version": "2.0.0",
+  "description": "Turn any Instagram profile (handle + N posts) into a clean, LLM-ready knowledge base. Local, private, free.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "downloads",
+    "sidePanel",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://www.instagram.com/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.instagram.com/*"
+      ],
+      "js": [
+        "libs/rate-limiter.js",
+        "content/ig-normalizer.js",
+        "content/ig-api-client.js",
+        "content/ig-render.js",
+        "content/ig-driver.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "side_panel": {
+    "default_path": "ui/sidepanel.html"
+  },
+  "action": {
+    "default_title": "InstaGhost — open the panel",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

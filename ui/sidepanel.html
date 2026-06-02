@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaGhost</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   InstaGhost — Side Panel (de-slop)
+   Rules: monochrome + 1 accent. Gradient ONLY on CTA and logo.
+   No "success" green, no LED dots (halo/pulse), no glow.
+   ============================================================ */
+:root{
+  --bg:#0a0a0c;
+  --s-1:#0f0f12; --s-2:#161619; --s-3:#1e1e23;
+  --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13);
+  --tx:#f5f5f6; --tx-2:rgba(245,245,246,.58); --tx-3:rgba(245,245,246,.36);
+  --accent:#E4405F;
+  --grad:linear-gradient(135deg,#7d54f0 0%,#E4405F 56%,#ff8f5e 100%);
+  --warn:#c99a52;
+  --r-sm:9px; --r-md:12px; --r-lg:14px; --r-full:999px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --ring:0 0 0 3px rgba(228,64,95,.30);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:var(--font); background:var(--bg); color:var(--tx);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  font-variant-numeric:tabular-nums; min-height:100%;
+}
+:focus-visible{outline:none; box-shadow:var(--ring); border-radius:var(--r-sm)}
+@media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important} }
+
+.panel{display:flex; flex-direction:column; gap:16px; padding:18px 16px; max-width:560px; margin:0 auto; min-height:100vh}
+
+/* header */
+.head{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.brand{display:flex; align-items:center; gap:7px; font-size:16px; font-weight:700; letter-spacing:-.02em}
+.brand .gh{font-size:16px}
+.brand .g{background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.pill{display:inline-flex; align-items:center; gap:7px; font-size:11.5px; font-weight:500; color:var(--tx-2); background:var(--s-2); border:1px solid var(--line); padding:5px 11px 5px 9px; border-radius:var(--r-full); white-space:nowrap}
+.pill .dot{width:5px; height:5px; border-radius:50%; background:var(--tx-3); flex:none}
+.pill[data-tone="ok"] .dot{background:var(--tx-2)}
+.pill[data-tone="warn"] .dot{background:var(--warn)}
+.pill[data-tone="busy"] .dot{background:var(--accent)}
+
+.rule{height:1px; background:var(--line)}
+
+/* purpose + mini-step */
+.lede{font-size:13px; line-height:1.5; color:var(--tx-2)}
+.lede b{color:var(--tx); font-weight:600}
+.miniwf{display:flex; align-items:center; gap:9px; margin-top:11px; font-size:11px; color:var(--tx-3)}
+.miniwf span{display:inline-flex; align-items:center; gap:6px}
+.miniwf i{width:17px; height:17px; border-radius:50%; border:1px solid var(--line-2); display:grid; place-items:center; font-size:10px; font-style:normal; font-weight:600; color:var(--tx-2)}
+.miniwf .sep{flex:1; height:1px; background:var(--line); max-width:18px}
+
+/* form */
+.field{display:flex; flex-direction:column; gap:7px}
+.label{font-size:10.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--tx-3)}
+.handle{display:flex; align-items:center; gap:8px; background:var(--s-2); border:1px solid var(--line); border-radius:var(--r-md); padding:11px 12px; transition:border-color .18s var(--ease), box-shadow .18s var(--ease)}
+.handle:focus-within{border-color:var(--accent); box-shadow:var(--ring)}
+.handle .at{color:var(--tx-3); font-weight:600; font-size:15px}
+.handle input{all:unset; flex:1; font-size:15px; font-weight:500; color:var(--tx); min-width:0}
+.handle input::placeholder{color:var(--tx-3); font-weight:400}
+.chip{display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; color:var(--tx-2); flex:none}
+.chip svg{width:13px; height:13px; color:var(--tx-3)}
+
+.grid2{display:flex; gap:10px; align-items:flex-end}
+.grid2 .field:first-child{flex:1}
+.stepper{display:flex; align-items:center; background:var(--s-2); border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden; height:44px}
+.stepper button{all:unset; width:40px; height:100%; display:grid; place-items:center; color:var(--tx-2); cursor:pointer; font-size:18px; transition:background .15s, color .15s}
+.stepper button:hover{background:var(--s-3); color:var(--tx)}
+.stepper input{all:unset; width:52px; height:100%; text-align:center; font-size:15px; font-weight:600; color:var(--tx); -moz-appearance:textfield}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+.toggle{display:flex; align-items:center; gap:9px; cursor:pointer; user-select:none; height:44px; padding:0 2px}
+.toggle .sw{width:38px; height:22px; border-radius:var(--r-full); background:var(--accent); position:relative; flex:none; transition:background .2s var(--ease)}
+.toggle .sw::after{content:""; position:absolute; top:2px; left:18px; width:18px; height:18px; border-radius:50%; background:#fff; transition:left .2s var(--ease)}
+.toggle.off .sw{background:var(--s-3)} .toggle.off .sw::after{left:2px}
+.toggle .t{font-size:12.5px; color:var(--tx-2)}
+
+/* buttons */
+.btn{font:inherit; font-weight:600; font-size:14px; border:0; border-radius:var(--r-md); padding:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; transition:transform .12s var(--ease), filter .18s, background .15s, border-color .15s}
+.btn:active{transform:scale(.99)}
+.btn:disabled{opacity:.5; cursor:default; transform:none}
+.btn svg{width:16px; height:16px; flex:none}
+.btn-primary{background:var(--grad); color:#fff; letter-spacing:.01em; box-shadow:0 4px 14px -10px rgba(0,0,0,.9)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.05)}
+.btn-ghost{background:var(--s-2); border:1px solid var(--line); color:var(--tx); font-size:13px; font-weight:500}
+.btn-ghost:hover{background:var(--s-3); border-color:var(--line-2)}
+.btn-copy{background:var(--s-3); border:1px solid var(--line-2); color:var(--tx)}
+.btn-quiet{background:transparent; color:var(--tx-2); font-size:12.5px; font-weight:500}
+.btn-quiet:hover{color:var(--tx)}
+.hint{font-size:11.5px; color:var(--tx-3); text-align:center; margin-top:9px}
+
+.trust{display:flex; align-items:center; justify-content:center; gap:6px; margin-top:14px; font-size:11px; color:var(--tx-3)}
+.trust svg{width:12px; height:12px}
+
+/* alert inline */
+.alert{display:flex; gap:10px; padding:12px; border-radius:var(--r-md); border:1px solid var(--line); background:var(--s-2); font-size:12.5px; line-height:1.45}
+.alert svg{width:16px; height:16px; flex:none; margin-top:1px; color:var(--tx-2)}
+.alert .a-t{color:var(--tx); font-weight:600; display:block; margin-bottom:2px}
+.alert .a-d{color:var(--tx-2)}
+.alert[data-tone="warn"]{border-color:rgba(201,154,82,.30); background:rgba(201,154,82,.06)} .alert[data-tone="warn"] svg{color:var(--warn)}
+
+/* step rail (running) */
+.wf{display:flex; align-items:flex-start; margin:4px 0 2px}
+.wf .st{flex:1; display:flex; flex-direction:column; align-items:center; gap:7px; position:relative}
+.wf .st .ic{width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:600; background:var(--s-2); border:1px solid var(--line-2); color:var(--tx-3)}
+.wf .st .ic svg{width:14px; height:14px}
+.wf .st .nm{font-size:11px; color:var(--tx-3)}
+.wf .st .sub{font-size:11px; font-weight:600; color:var(--tx-2); min-height:14px}
+.wf .st::before{content:""; position:absolute; top:14px; left:-50%; width:100%; height:2px; background:var(--line); z-index:-1}
+.wf .st:first-child::before{display:none}
+.wf .st.done .ic{border-color:var(--line-2); color:var(--tx)}
+.wf .st.done::before{background:var(--line-2)}
+.wf .st.active .ic{background:var(--accent); border-color:transparent; color:#fff}
+.wf .st.active .nm{color:var(--tx)}
+.wf .st.active::before{background:var(--accent)}
+
+.bar{height:7px; border-radius:var(--r-full); background:var(--s-2); overflow:hidden}
+.bar > i{display:block; height:100%; width:0%; border-radius:var(--r-full); background:var(--accent); transition:width .5s var(--ease)}
+.runfoot{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.runfoot .msg{font-size:12px; color:var(--tx-2); display:flex; align-items:center; gap:7px}
+.runfoot .msg svg{width:14px; height:14px; color:var(--tx-3)}
+
+/* result */
+.result{display:flex; flex-direction:column; gap:14px}
+.res-head{display:flex; align-items:center; gap:12px}
+.res-head .ic{width:40px; height:40px; border-radius:50%; background:var(--s-2); border:1px solid var(--line-2); display:grid; place-items:center; color:var(--tx); flex:none}
+.res-head .ic svg{width:20px; height:20px}
+.res-head .who{font-size:16px; font-weight:700; letter-spacing:-.01em}
+.res-head .meta{font-size:12px; color:var(--tx-2); margin-top:2px}
+.res-meta-strong{color:var(--tx); font-weight:600}
+.two{display:flex; gap:10px}
+.savedrow{display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--tx-3); justify-content:center}
+.savedrow svg{width:13px; height:13px}
+
+/* footer */
+.foot{margin-top:auto; display:flex; align-items:center; justify-content:center; gap:6px; padding-top:8px; font-size:11px; color:var(--tx-3)}
+.foot .lk{all:unset; cursor:pointer; color:var(--tx-2); text-decoration:underline; text-underline-offset:2px}
+.foot .lk:hover{color:var(--accent)}
+
+.stack{display:flex; flex-direction:column; gap:16px}
+.toggles{display:flex; gap:20px; flex-wrap:wrap; align-items:center}
+.field .stepper{align-self:flex-start}
+
+/* toast (transient, understated) */
+.toast-wrap{position:fixed; left:0; right:0; bottom:16px; display:flex; flex-direction:column; align-items:center; gap:8px; pointer-events:none; z-index:50}
+.toast{font-size:12.5px; font-weight:500; padding:9px 15px; border-radius:var(--r-full); background:var(--s-3); border:1px solid var(--line-2); color:var(--tx); box-shadow:0 8px 24px -10px rgba(0,0,0,.7); animation:tin .2s var(--ease)}
+@keyframes tin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* default visibility (JS manages the states) */
+#igOffig,#igProgress,#igResult{display:none}
+#igAlert:empty{display:none}
+</style>
+</head>
+<body>
+  <div class="panel" id="panel">
+
+    <div class="head">
+      <div class="brand"><span class="gh">👻</span><span>Insta</span><span class="g">Ghost</span></div>
+      <div class="pill" id="igPill" data-tone="ok"><span class="dot"></span><span id="igPillTx">…</span></div>
+    </div>
+
+    <!-- purpose -->
+    <div id="igLede">
+      <p class="lede">Turn an Instagram profile into an <b>LLM-ready guide</b> (Markdown).</p>
+      <div class="miniwf" aria-hidden="true">
+        <span><i>1</i> Profile</span><span class="sep"></span>
+        <span><i>2</i> Posts</span><span class="sep"></span>
+        <span><i>3</i> Comments</span>
+      </div>
+    </div>
+
+    <div class="rule" id="igRule"></div>
+
+    <!-- inline alert (filled by JS: info / errors) -->
+    <div id="igAlert" role="status" aria-live="polite"></div>
+
+    <!-- extraction FORM -->
+    <div class="stack" id="igForm">
+      <div class="field">
+        <span class="label">Profile</span>
+        <label class="handle">
+          <span class="at">@</span>
+          <input id="igHandle" placeholder="type or open a profile" spellcheck="false" autocomplete="off" aria-label="profile handle">
+          <span class="chip" id="igDetected" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            detected
+          </span>
+        </label>
+      </div>
+      <div class="field">
+        <span class="label">Posts — newest first</span>
+        <div class="stepper">
+          <button type="button" id="igMinus" aria-label="minus">−</button>
+          <input id="igLimit" type="number" value="60" min="1" max="1000" aria-label="number of posts">
+          <button type="button" id="igPlus" aria-label="plus">+</button>
+        </div>
+      </div>
+      <div class="toggles">
+        <label class="toggle" id="igCommentsToggle"><span class="sw"></span><span class="t">Top comments</span></label>
+        <label class="toggle off" id="igMediaToggle"><span class="sw"></span><span class="t">Photos &amp; videos</span></label>
+      </div>
+      <div>
+        <button class="btn btn-primary" id="igExtractBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>
+          Extract
+        </button>
+        <p class="hint">Clean Markdown, ready to paste into ChatGPT or Claude.</p>
+      </div>
+    </div>
+
+    <!-- state: not on Instagram -->
+    <div id="igOffig">
+      <div class="alert" data-tone="warn" role="status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.5 20h19L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg>
+        <div><span class="a-t">Open Instagram to get started</span><span class="a-d">InstaGhost reads data from your already logged-in Instagram session: you need a tab open on instagram.com.</span></div>
+      </div>
+      <div class="stack" style="margin-top:8px">
+        <button class="btn btn-primary" id="igOpenIg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          Open instagram.com
+        </button>
+        <p class="hint">Then go to the profile you want to extract.</p>
+      </div>
+      <div class="trust">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+        uses your session · public data only · no server
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div id="igProgress">
+      <p class="lede" style="margin-bottom:6px">Building the guide for <b id="igRunWho">@—</b>…</p>
+      <div class="wf">
+        <div class="st" id="igSt1"><span class="ic" id="igIc1">1</span><span class="nm">Profile</span><span class="sub" id="igSub1">—</span></div>
+        <div class="st" id="igSt2"><span class="ic" id="igIc2">2</span><span class="nm">Posts</span><span class="sub" id="igSub2">—</span></div>
+        <div class="st" id="igSt3"><span class="ic" id="igIc3">3</span><span class="nm">Comments</span><span class="sub" id="igSub3">—</span></div>
+      </div>
+      <div class="bar"><i id="igFill"></i></div>
+      <div class="runfoot" style="margin-top:14px">
+        <span class="msg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+          You can leave the panel open.
+        </span>
+        <button class="btn btn-quiet" id="igAbort" style="width:auto">Cancel</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="igResult">
+      <div class="result">
+        <div class="res-head">
+          <div class="ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="who" id="igResWho">@—</div>
+            <div class="meta" id="igResMeta">—</div>
+          </div>
+        </div>
+        <button class="btn btn-copy" id="igCopy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          Copy the Markdown
+        </button>
+        <div class="two">
+          <button class="btn btn-ghost" id="igDlMd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
+            Markdown
+          </button>
+          <button class="btn btn-ghost" id="igDlJson">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
+            JSON
+          </button>
+        </div>
+        <div class="savedrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="igSaved">already saved to your Downloads folder</span>
+        </div>
+        <div class="rule" style="margin:2px 0"></div>
+        <button class="btn btn-quiet" id="igAgain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-.5 4M20 5v6h-6"/></svg>
+          New extraction
+        </button>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span>InstaGhost</span><span style="color:var(--tx-3)">·</span>
+      <button class="lk" id="igReset" type="button">reset &amp; clear data</button>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# OS cruft
+.DS_Store
+**/.DS_Store
+
+# Node (if ever added)
+node_modules/
+
+# Log
+*.log
+
+# Internal tooling / planning artifacts (not part of the public project)
+.agent/
+.arke-swarm/
+.nwave/
+*.resolved
+
+# Unrelated or private material kept local only
+docs/ferrari-stock-vs-search/
+docs/Documentazione apify/
+docs/apify-parity/output/
+legacy/unrelated-router-tool/
