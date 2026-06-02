@@ -122,24 +122,30 @@ Paste it into your favourite LLM and ask: *"Build me a neighbourhood food guide 
 
 InstaGhost uses a "Driver A" architecture: a content script asks Instagram's **internal web APIs** for data, using your first-party cookies (same-origin, from the isolated content-script world). No DOM scraping, no headless browser, no third-party proxy.
 
-```mermaid
-flowchart TD
-    SP["🪟 Side Panel<br/>(ui/sidepanel.html + .js)<br/>drives everything, renders states"]
-    CD["🧭 ig-driver.js<br/>orchestrator"]
-    AC["🔌 ig-api-client.js<br/>fetch /api/v1/… (credentials: include)"]
-    NM["🧩 ig-normalizer.js<br/>raw IG JSON → schema-03 (+ media[])"]
-    RND["📝 ig-render.js<br/>schema → Markdown knowledge base"]
-    RL["🛡️ rate-limiter.js<br/>anti-detection cadence"]
-    SW["💾 service-worker.js<br/>saves .md/.json + media"]
-
-    SP -- "ig_detect / ig_extract / ig_abort" --> CD
-    CD --> AC
-    AC -- uses --> RL
-    AC --> NM
-    NM --> RND
-    CD -- "ig_progress / ig_result" --> SP
-    CD -- "ig_download / ig_download_media" --> SW
-    SW -- "ig_media_progress / _done" --> SP
+```text
+┌──────────────────────────────────────────────────────────────────┐
+│  🪟  SIDE PANEL  (ui/sidepanel.html + .js)                         │
+│      drives the flow · renders every state                         │
+└──────────────┬─────────────────────────────────────▲──────────────┘
+   ig_detect /  │                                     │  ig_progress /
+   ig_extract / │                                     │  ig_result /
+   ig_abort     ▼                                     │  ig_media_*
+┌──────────────────────────────────────────────────────────────────┐
+│  CONTENT SCRIPT  (runs on instagram.com · logged-in session)       │
+│                                                                    │
+│   🧭 ig-driver.js       orchestrator                               │
+│    ├─ 🔌 ig-api-client.js   fetch /api/v1/… (credentials: include) │
+│    │        └── uses ──▶  🛡️ rate-limiter.js  (anti-detection)     │
+│    ├─ 🧩 ig-normalizer.js   raw IG JSON → schema-03 (+ media[])    │
+│    └─ 📝 ig-render.js       schema → Markdown knowledge base        │
+└──────────────┬─────────────────────────────────────────────────────┘
+   ig_download /│
+   ig_download_media
+                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  💾  SERVICE WORKER  (background/service-worker.js)                 │
+│      saves .md / .json  ·  downloads photos & videos               │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 **Endpoints used** (internal web APIs, from your logged-in session):
