@@ -270,9 +270,17 @@ The rate-limiter has Node tests: `node libs/test-backoff.js` and `node libs/test
 
 ---
 
+## 👤 Author
+
+Created and maintained by **[Vlad Vrinceanu](https://www.linkedin.com/in/vladvrinceanu/)**.
+
+If InstaGhost saves you time or money, a ⭐ on the repo and a connect on [LinkedIn](https://www.linkedin.com/in/vladvrinceanu/) are always appreciated.
+
+---
+
 ## 📄 License
 
-[MIT](LICENSE) © 2026 InstaGhost contributors. Free to use, modify and share.
+[MIT](LICENSE) © 2026 [Vlad Vrinceanu](https://www.linkedin.com/in/vladvrinceanu/). Free to use, modify and share.
 
 ---
 
@@ -283,5 +291,9 @@ The rate-limiter has Node tests: `node libs/test-backoff.js` and `node libs/test
 <br/><br/>
 
 Made for everyone who wanted an Instagram scraper that's **free, private and actually yours.** 👻
+
+<br/>
+
+Built by [**Vlad Vrinceanu**](https://www.linkedin.com/in/vladvrinceanu/) · MIT licensed
 
 </div>
